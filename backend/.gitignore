@@ -1,0 +1,6 @@
+# This file tells Git what to ignore.
+# We ignore the massive node_modules folder.
+/node_modules
+
+# We ignore our SECRETS file.
+.env
