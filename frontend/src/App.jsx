@@ -168,7 +168,13 @@ function Sidebar({ currentPage, setCurrentPage, isSidebarOpen, setIsSidebarOpen 
 }
 
 // NEW "FROSTED GLASS" HEADER
+// NEW "FROSTED GLASS" HEADER
 function Header({ user, setIsSidebarOpen, currentPage, onLogout }) {
+  // --- ADD THIS ---
+  // State to manage the notification panel's visibility
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  // --- END ADD ---
+
   const pageTitles = {
     dashboard: 'Dashboard',
     lostfound: 'Lost & Found',
@@ -192,11 +198,47 @@ function Header({ user, setIsSidebarOpen, currentPage, onLogout }) {
       </div>
       
       <div className="flex items-center space-x-3 md:space-x-5">
-        <button className="relative text-gray-500 hover:text-gray-800 transition-colors" title="Notifications (Not Implemented)">
-          <Bell className="w-6 h-6" />
-          <span className="absolute top-0 right-0 w-2 h-2 bg-rose-500 rounded-full"></span>
-        </button>
         
+        {/* --- WRAP THE BELL IN A 'relative' DIV --- */}
+        <div className="relative">
+          {/* --- ADD onClick TO THIS BUTTON --- */}
+          <button 
+            onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} 
+            className="relative text-gray-500 hover:text-gray-800 transition-colors" 
+            title="Notifications"
+          >
+            <Bell className="w-6 h-6" />
+            <span className="absolute top-0 right-0 w-2 h-2 bg-rose-500 rounded-full"></span>
+          </button>
+          {/* --- END BUTTON MODIFICATION --- */}
+
+          {/* --- ADD THIS NOTIFICATION PANEL --- */}
+          {isNotificationsOpen && (
+            <div 
+              className="
+                absolute top-12 right-0 z-20 w-72 
+                bg-white rounded-lg shadow-xl border border-gray-200
+              "
+            >
+              <div className="flex justify-between items-center p-3 border-b border-gray-100">
+                <h4 className="font-semibold text-gray-800">Notifications</h4>
+                {/* This "X" button lets you close the panel */}
+                <button onClick={() => setIsNotificationsOpen(false)} className="text-gray-400 hover:text-gray-600">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              {/* This is a placeholder for your demo */}
+              <div className="text-center text-gray-500 text-sm py-8 px-4">
+                <Bell className="w-8 h-8 mx-auto text-gray-300" />
+                <p className="mt-2 font-medium">No new notifications</p>
+                <p className="text-xs">You're all caught up!</p>
+              </div>
+            </div>
+          )}
+          {/* --- END NOTIFICATION PANEL --- */}
+        </div>
+        {/* --- END WRAPPER --- */}
+
         <div className="flex items-center space-x-2">
           <img 
             src={`https://placehold.co/100x100/4f46e5/e0e7ff?text=${user.name.charAt(0)}`}
@@ -220,7 +262,6 @@ function Header({ user, setIsSidebarOpen, currentPage, onLogout }) {
     </header>
   );
 }
-
 
 // LOGIN PAGE (Corrected)
 function LoginPage({ onLogin }) {
