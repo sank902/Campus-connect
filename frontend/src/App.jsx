@@ -28,8 +28,10 @@ import {
   Sparkles // New icon for dashboard hero
 } from 'lucide-react';
 
-// --- API Base URL ---
-const API_URL = 'http://localhost:5001/api';
+// Use Vite env var in production, fallback to local dev server
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+const API_URL = `${API_BASE.replace(/\/$/, '')}/api`; // ensure no trailing slash
+
 
 // --- Main App Component ---
 export default function App() {
