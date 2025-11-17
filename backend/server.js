@@ -4,6 +4,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import helmet from 'helmet';
+
 
 // Import our models
 import Event from './models/event.model.js';
@@ -21,7 +23,18 @@ const app = express();
 const PORT = process.env.PORT || 5001; // Use port 5001
 const JWT_SECRET = process.env.JWT_SECRET;
 
-app.use(cors()); 
+
+app.use(cors({
+  origin: process.env.FRONTEND_ORIGIN || "http://localhost:5173",
+  credentials: true
+}));
+
+app.options("*", cors({
+  origin: process.env.FRONTEND_ORIGIN || "http://localhost:5173",
+  credentials: true
+}));
+
+app.use(helmet());
 app.use(express.json());
 
 // --- 2. Database Connection ---
@@ -39,6 +52,12 @@ app.get('/', (_req, res) => {
 // --- AUTH ROUTES ---
 
 // POST /api/auth/register
+
+app.get("/healthz", (_req, res) => {
+  res.status(200).json({ ok: true });
+});
+
+
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -330,5 +349,6 @@ app.delete('/api/items/:id', authMiddleware, async (req, res) => {
 
 // --- 4. Start The Server ---
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
+
 });
